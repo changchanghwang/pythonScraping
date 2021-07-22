@@ -9,8 +9,8 @@ headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/
 data = requests.get('https://www.genie.co.kr/chart/top200?ditc=D&ymd=20200403&hh=23&rtm=N&pg=1',headers=headers)
 
 soup = BeautifulSoup(data.text, 'html.parser')
-#body-content > div.newest-list > div > table > tbody > tr:nth-child(2) > td.number
 trs = soup.select('#body-content > div.newest-list > div > table > tbody > tr')
+
 for tr in trs:
     ranks = tr.select_one('td.number')
     titles = tr.select_one('td.info > a.title.ellipsis')
@@ -19,4 +19,10 @@ for tr in trs:
     title = titles.text.strip()
     artist = artists.text.strip()
 
-    print(rank, 'ㅣ', title, 'ㅣ', artist)
+first = db.musicChart.find_one({'rank':'1'})
+print(first['title'],'ㅣ',first['artist'])
+print('-----------------------------------')
+
+IUs = list(db.musicChart.find({'artist' : '아이유 (IU)'},{'_id':False}))
+for IU in IUs :
+    print(IU['title'])
